@@ -1,0 +1,30 @@
+<?php
+
+namespace Amp;
+
+/**
+ * The stub validator sees only stub files and PHP's own symbols, so the class
+ * `async()` returns has to be declared here as well. An empty stub leaves the
+ * real class untouched: PHPStan only overrides the PHPDoc a stub provides.
+ *
+ * @template-covariant T
+ */
+final class Future
+{
+}
+
+/**
+ * amphp/amp declares the closure as `\Closure(...):T`, which PHPStan cannot
+ * parse, so every `async()` call resolves to `Future<mixed>`. This stub
+ * restates the same contract in a form PHPStan understands.
+ *
+ * @template T
+ *
+ * @param \Closure(mixed ...): T $closure
+ * @param mixed ...$args
+ *
+ * @return Future<T>
+ */
+function async(\Closure $closure, mixed ...$args): Future
+{
+}

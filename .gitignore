@@ -1,0 +1,5 @@
+/vendor/
+/.env
+/.phpstan.cache/
+/.phpunit.cache/
+/.php-cs-fixer.cache

@@ -1,0 +1,8 @@
+parameters:
+    level: max
+    tmpDir: .phpstan.cache
+    paths:
+        - src
+        - tests
+    stubFiles:
+        - stubs/amp-async.stub
