@@ -1,0 +1,78 @@
+{
+  "prompt": "Read files of different shapes",
+  "setup": {
+    "files": {
+      "lines.txt": ""
+    }
+  },
+  "calls": [
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "seq 1 2500 > lines.txt; printf '\\x89PNG\\r\\n\\x1a\\n0000' > logo.png; printf 'ab\\0cd' > blob.bin"
+      },
+      "expect": {
+        "equals": "(no output)"
+      }
+    },
+    {
+      "name": "read",
+      "inputs": {
+        "path": "lines.txt"
+      },
+      "expect": {
+        "matches": "~^1\\n2\\n.*\\n2000\\n\\n\\[Showing lines 1-2000 of 2501\\. Use offset=2001 to continue\\.\\]$~s"
+      }
+    },
+    {
+      "name": "read",
+      "inputs": {
+        "path": "lines.txt",
+        "offset": 2499,
+        "limit": 5
+      },
+      "expect": {
+        "equals": "2499\n2500\n"
+      }
+    },
+    {
+      "name": "read",
+      "inputs": {
+        "path": "lines.txt",
+        "offset": 9999
+      },
+      "expect": {
+        "error": true,
+        "contains": "is beyond end of file (2501 lines total)"
+      }
+    },
+    {
+      "name": "read",
+      "inputs": {
+        "path": "missing.txt"
+      },
+      "expect": {
+        "error": true,
+        "contains": "File not found"
+      }
+    },
+    {
+      "name": "read",
+      "inputs": {
+        "path": "logo.png"
+      },
+      "expect": {
+        "equals": "Binary file (image/png, 12B); content not shown."
+      }
+    },
+    {
+      "name": "read",
+      "inputs": {
+        "path": "blob.bin"
+      },
+      "expect": {
+        "equals": "Binary file (application/octet-stream, 5B); content not shown."
+      }
+    }
+  ]
+}

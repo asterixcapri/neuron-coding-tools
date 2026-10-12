@@ -1,0 +1,44 @@
+{
+  "prompt": "Use a toolkit restricted to read and grep (run with --only=read,grep)",
+  "setup": {
+    "files": {
+      "hello.txt": "Hello toolkit\n"
+    }
+  },
+  "calls": [
+    {
+      "name": "read",
+      "inputs": {
+        "path": "hello.txt"
+      },
+      "expect": {
+        "equals": "Hello toolkit\n"
+      }
+    },
+    {
+      "name": "grep",
+      "inputs": {
+        "pattern": "Hello"
+      },
+      "expect": {
+        "equals": "hello.txt:1: Hello toolkit"
+      }
+    },
+    {
+      "name": "write",
+      "inputs": {
+        "path": "hello.txt",
+        "content": "overwritten"
+      },
+      "expect": {
+        "error": true,
+        "equals": "ERROR: The tool write is not registered on this agent: the call cannot be executed."
+      }
+    }
+  ],
+  "expect": {
+    "files": {
+      "hello.txt": "Hello toolkit\n"
+    }
+  }
+}

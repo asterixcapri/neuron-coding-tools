@@ -1,0 +1,42 @@
+{
+  "prompt": "Rename greet() to welcome() in app.php and make the message friendlier",
+  "setup": {
+    "files": {
+      "app.php": "<?php\r\nfunction greet(): string\r\n{\r\n    return 'Hi';\r\n}\r\necho greet();\r\n"
+    }
+  },
+  "calls": [
+    {
+      "name": "read",
+      "inputs": {"path": "app.php"},
+      "expect": {"contains": "function greet()"}
+    },
+    {
+      "name": "edit",
+      "inputs": {
+        "path": "app.php",
+        "edits": [
+          {"oldText": "function greet(): string", "newText": "function welcome(): string"},
+          {"oldText": "return 'Hi';", "newText": "return 'Welcome!';"},
+          {"oldText": "echo greet();", "newText": "echo welcome();"}
+        ]
+      },
+      "expect": {"contains": "Successfully replaced 3 block(s) in app.php."}
+    },
+    {
+      "name": "edit",
+      "inputs": {"path": "app.php", "edits": [{"oldText": "greet", "newText": "x"}]},
+      "expect": {"error": true, "contains": "Could not find"}
+    },
+    {
+      "name": "bash",
+      "inputs": {"command": "php app.php"},
+      "expect": {"equals": "Welcome!"}
+    }
+  ],
+  "expect": {
+    "files": {
+      "app.php": "<?php\r\nfunction welcome(): string\r\n{\r\n    return 'Welcome!';\r\n}\r\necho welcome();\r\n"
+    }
+  }
+}

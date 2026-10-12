@@ -1,0 +1,78 @@
+{
+  "prompt": "Run some shell commands in the project",
+  "setup": {
+    "files": {
+      "README.md": "demo\n"
+    }
+  },
+  "calls": [
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "pwd; ls"
+      },
+      "expect": {
+        "matches": "~/workspace\\nREADME\\.md\\n$~"
+      }
+    },
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "echo out; echo err >&2; exit 3"
+      },
+      "expect": {
+        "error": true,
+        "contains": [
+          "out",
+          "err",
+          "Command exited with code 3"
+        ]
+      }
+    },
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "seq 1 3000"
+      },
+      "expect": {
+        "matches": "~^1002\\n.*\\n3000\\n\\n\\n\\[Showing lines 1002-3001 of 3001\\. Full output: \\S+/solaro-bash-[0-9a-f]{16}\\.log\\]$~s"
+      }
+    },
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "echo started; sleep 31; echo late",
+        "timeout": 1
+      },
+      "expect": {
+        "error": true,
+        "matches": "~^ERROR: started\\n(Killed\\n)?\\n\\nCommand timed out after 1 seconds$~"
+      }
+    },
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "pgrep -x -f 'sleep 31' || echo none-left"
+      },
+      "expect": {
+        "equals": "none-left\n"
+      }
+    },
+    {
+      "name": "bash",
+      "inputs": {
+        "command": "printf 'made by bash' > out.txt"
+      },
+      "expect": {
+        "equals": "(no output)"
+      }
+    }
+  ],
+  "expect": {
+    "files": {
+      "README.md": "demo\n",
+      "out.txt": "made by bash"
+    },
+    "tmpFiles": 1
+  }
+}

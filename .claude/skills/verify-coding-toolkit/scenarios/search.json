@@ -1,0 +1,114 @@
+{
+  "prompt": "Explore the project tree and search it",
+  "setup": {
+    "files": {
+      ".gitignore": "build/\n",
+      ".env": "SECRET=1\n",
+      "src/App.php": "<?php\nclass App\n{\n    // TODO: boot\n}\n",
+      "src/Util/Str.php": "<?php\n// todo lowercase\nfinal class Str {}\n",
+      "build/App.php": "<?php // TODO generated\n",
+      "notes.md": "a.b literal\naxb not literal\n"
+    }
+  },
+  "calls": [
+    {
+      "name": "ls",
+      "inputs": {},
+      "expect": {
+        "contains": [
+          ".env",
+          ".gitignore",
+          "build/",
+          "notes.md",
+          "src/"
+        ]
+      }
+    },
+    {
+      "name": "find",
+      "inputs": {
+        "pattern": "**/*.php"
+      },
+      "expect": {
+        "equals": "src/App.php\nsrc/Util/Str.php"
+      }
+    },
+    {
+      "name": "find",
+      "inputs": {
+        "pattern": "*.nope"
+      },
+      "expect": {
+        "equals": "No files found matching pattern"
+      }
+    },
+    {
+      "name": "grep",
+      "inputs": {
+        "pattern": "TODO"
+      },
+      "expect": {
+        "equals": "src/App.php:4:     // TODO: boot"
+      }
+    },
+    {
+      "name": "grep",
+      "inputs": {
+        "pattern": "todo",
+        "ignoreCase": true,
+        "glob": "*.php"
+      },
+      "expect": {
+        "contains": [
+          "src/App.php:4:",
+          "src/Util/Str.php:2:"
+        ]
+      }
+    },
+    {
+      "name": "grep",
+      "inputs": {
+        "pattern": "a.b",
+        "literal": true,
+        "path": "notes.md"
+      },
+      "expect": {
+        "equals": "notes.md:1: a.b literal"
+      }
+    },
+    {
+      "name": "grep",
+      "inputs": {
+        "pattern": "nothing-here"
+      },
+      "expect": {
+        "equals": "No matches found"
+      }
+    },
+    {
+      "name": "write",
+      "inputs": {
+        "path": "docs/deep/new.md",
+        "content": "# New\n"
+      },
+      "expect": {
+        "equals": "Successfully wrote 6 bytes to docs/deep/new.md"
+      }
+    },
+    {
+      "name": "find",
+      "inputs": {
+        "pattern": "**/*.md",
+        "path": "docs"
+      },
+      "expect": {
+        "contains": "deep/new.md"
+      }
+    }
+  ],
+  "expect": {
+    "files": {
+      "docs/deep/new.md": "# New\n"
+    }
+  }
+}
